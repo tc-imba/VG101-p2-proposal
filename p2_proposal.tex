@@ -37,27 +37,71 @@
 
 Assume that there are $n$ players in the game, namely we can call them player 1, player 2, ..., player $n$. \bigskip
 
-The players sit in a circle, and start their \textbf{play} in the order of their seats. When the game starts, player 1 plays first. And after player $n$ finishes his \textbf{play}, one \textbf{round} ends, player 1 (if he is still \textbf{alive}) starts the next round. Before the game starts, shuffle the cards, and each player draws \textbf{four cards} from the deck in the above order, initialize their health points according to the \textbf{generals} they selected (will be introduced later). \bigskip
+The players sit in a circle, and start their \textbf{play} in order of their seats. When the game starts, player 1 plays first. And after player $n$ finishes his \textbf{play}, one \textbf{round} ends, player 1 (if he is still \textbf{alive}) starts the next round. \bigskip
+
+The \textbf{distance} between two players is defined as the minimum difference of their seats' position. For example, initially the \textbf{distance} between player 1 and $n$ is 1, and between player 3 and 8 is $\min\{5,n-5\}$. If a player had left the game, his seat is removed so that the calculation of \textbf{distance} should skip him. The minimum \textbf{distance} between two players is 1. \bigskip
+
+Before the game starts, shuffle the cards, and each player draws \textbf{four cards} from the deck in the above order, initialize their health point according to the \textbf{generals} they selected (will be introduced later). \bigskip
+
+When the health point of a player is no more than zero, we can say that he is \textbf{dying}. Then he \textbf{must} request for rescue from all players (including himself) in a round, starting from the current playing player. Note that he himself can play both \texttt{peach} and \texttt{wine}, while other players can only play \texttt{peach} to save him. Each \texttt{peach} or \texttt{wine} can recover him for 1 health point. The request procedure ends when he gets rid of the \textbf{dying} state. If all players have been requested but he is still in the \textbf{dying} state, the player's game over, remove his seat and all of his cards are moved into the \textbf{used card pool}. \bigskip
 
 Each player has six stages in their turn, that is
 \begin{itemize}
 \item prepare stage (some skills can be used in this stage)
-\item judge stage (judge the delayed stratagem(s))
+\item judge stage (judge the delayed strategy card(s))
 \item draw stage (draw two cards from the deck)
 \item play stage (player can play cards in this stage)
 \item discard stage (player can only hold cards no more than their health points, the exceeding cards will be discarded)
 \item finish stage (some skills can be used in this stage)
 \end{itemize}
 
-\subsection{Normal Cards}
+When a player plays or discards a card, or a card is used as a \textbf{judge card}, it goes into the \textbf{used card pool}, and as soon as the deck is empty, shuffle the \textbf{used card pool} to make a new deck. \bigskip
+
+\subsection{Cards}
+
+\subsubsection{Normal Cards}
 
 There are four types of normal cards in the game:
 \begin{itemize}
-\item fight: fight another player, if he doesn't play a ``dodge'', cause damage (default: 1)
-\item dodge: dodge from a fight (can not be played initiatively)
-\item peach: recover one health point, can be used on another player only if his health point is 0
-\item wine: recover one health point when own health point is 0, or add 1 damage to the next ``fight'' in this stage
+\item \texttt{fight}: slash another player, if he doesn't play a ``dodge'', cause damage (default: 1)
+\item \texttt{dodge}: dodge from a slash (can not be played initiatively)
+\item \texttt{peach}: recover one health point, can be used on another player only if his health point is 0
+\item \texttt{wine}: recover one health point when own health point is 0, or add 1 damage to the next ``slash'' in this stage
 \end{itemize}
+
+\texttt{slash} and \texttt{wine} can be only used once in the play stage.
+
+\subsubsection{Strategy Cards}
+
+These strategy cards can only be played on another character:
+\begin{itemize}
+\item \texttt{Duel}: From the target player to you, play a ``slash'' card, and repeats, until one who doesn’t play ``slash'', the one get hurt 1 point by another. Duel may bring hurt to yourself.
+\item \texttt{Sabotage}: Discard a player card except you.
+\item \texttt{Theft}: Pick up a card from a character whose \textbf{distance} to you within 1 range.
+\item \texttt{Murder with Borrowed Weapon}: select target who has a weapon in equipment zone and target B (can be yourself) in his attack range. Target A plays a ``slash'' to target B, or you get A’s weapon in equipment zone.
+\end{itemize}
+
+These strategy cards can be played on any character:
+\begin{itemize}
+\item \texttt{•}
+\end{itemize}
+
+These strategy cards can be played directly:
+\begin{itemize}
+\item \texttt{Arrow Rain}: Everyone except you has to play a ``Dodge'', or you deal 1 damage to him.
+\item \texttt{South Invasion}: Everyone except you has to play a ``Slash'', or you deal 1 damage to him.
+\item \texttt{Oath in Peach Garden}: Everyone recover 1 health point.
+\item \texttt{All Out of None}: Draw two cards.
+\item \texttt{Harvest}: Reveal top $X$ cards of the card pile, where $X$ is the number of players still in play. Start with you, each player in turn chooses and takes one card from the revealed cards.
+\end{itemize} 
+
+These are delayed strategy cards, which will be put into the target's Fate Zone take effect in his fate phase:
+\begin{itemize}
+\item \texttt{Lightning}: Put this card in your Fate Zone. \textbf{Fate}: Reveal the top card of the card pile. If it is a spade card with number from 2 to 9, Lightning deals 3 damage to you; if it is not, put Lightning in the Fate Zone of the player to the next player to take turn.
+\item \texttt{Drown in Happiness}: Put this card in another player's Fate Zone. \textbf{Fate}: Reveal the top card of the card pile, if it is a heart card, he will not be affected; or he will lose the action phase.
+\item \texttt{Starvation}: Put this card in another player's Fate Zone, whose \textbf{distance} to you within 1 range. \textbf{Fate}: Reveal the top card of the card pile, if it is a clubs card, he will not be affected; or he will lose the draw phase.
+\end{itemize}
+
 
 \subsection{Countries and Generals}
 
@@ -66,8 +110,6 @@ Before the game starts, each player can select two generals in the same country.
 The general cards are placed upside down initially, which means the identities of a player (including his country and generals) are kept secret, and he doesn't belong to any country. When he \textbf{turns over} any of his generals, his country is claimed, thus everyone in the game will know it. When a player is dead, all of his generals will be \textbf{turned over} and his country will be claimed. \bigskip
 
 If a player first \textbf{turns over} at least one of his generals, he can draw three cards from the deck.
-
-
 
 
 
