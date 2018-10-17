@@ -33,6 +33,8 @@
 
 \section{Project Setup}
 
+Game name: Legends of the Three Kingdoms 
+
 \subsection{Game Introduction}
 
 Assume that there are $n$ players in the game, namely we can call them player 1, player 2, ..., player $n$. \bigskip
@@ -45,17 +47,17 @@ Before the game starts, shuffle the cards, and each player draws \textbf{four ca
 
 When the health point of a player is no more than zero, we can say that he is \textbf{dying}. Then he \textbf{must} request for rescue from all players (including himself) in a round, starting from the current playing player. Note that he himself can play both \texttt{peach} and \texttt{wine}, while other players can only play \texttt{peach} to save him. Each \texttt{peach} or \texttt{wine} can recover him for 1 health point. The request procedure ends when he gets rid of the \textbf{dying} state. If all players have been requested but he is still in the \textbf{dying} state, the player's game over, remove his seat and all of his cards are moved into the \textbf{used card pool}. \bigskip
 
-Each player has six stages in their turn, that is
+Each player has four phases in his turn, which are
 \begin{itemize}
-\item prepare stage (some skills can be used in this stage)
-\item judge stage (judge the delayed strategy card(s))
-\item draw stage (draw two cards from the deck)
-\item play stage (player can play cards in this stage)
-\item discard stage (player can only hold cards no more than their health points, the exceeding cards will be discarded)
-\item finish stage (some skills can be used in this stage)
+%\item prepare phase (some skills can be used in this stage)
+\item fate phase (judge the delayed strategy card(s))
+\item draw phase (draw two cards from the deck)
+\item play phase (player can play cards in this stage)
+\item discard phase (player can only hold cards no more than their health points, the exceeding cards will be discarded by himself)
+%\item finish phase (some skills can be used in this stage)
 \end{itemize}
 
-When a player plays or discards a card, or a card is used as a \textbf{judge card}, it goes into the \textbf{used card pool}, and as soon as the deck is empty, shuffle the \textbf{used card pool} to make a new deck. \bigskip
+When a player plays or discards a card, or a card is used as a \textbf{fate card}, it goes into the \textbf{used card pool}, and as soon as the deck is empty, shuffle the \textbf{used card pool} to make a new deck. \bigskip
 
 \subsection{Cards}
 
@@ -63,53 +65,76 @@ When a player plays or discards a card, or a card is used as a \textbf{judge car
 
 There are four types of normal cards in the game:
 \begin{itemize}
-\item \texttt{fight}: slash another player, if he doesn't play a ``dodge'', cause damage (default: 1)
-\item \texttt{dodge}: dodge from a slash (can not be played initiatively)
-\item \texttt{peach}: recover one health point, can be used on another player only if his health point is 0
-\item \texttt{wine}: recover one health point when own health point is 0, or add 1 damage to the next ``slash'' in this stage
+\item \texttt{Slash}: slash another player, if he doesn't play a ``dodge'', cause damage (of default: 1)
+\item \texttt{Dodge}: dodge from a slash (can not be played initiatively)
+\item \texttt{Peach}: recover one health point, can be used on another player only if his health point is 0
+\item \texttt{Wine}: recover one health point when own health point is 0, or add 1 damage to the next ``slash'' in this stage
 \end{itemize}
 
 \texttt{slash} and \texttt{wine} can be only used once in the play stage.
 
-\subsubsection{Strategy Cards}
+\subsubsection{Scroll Cards}
 
-These strategy cards can only be played on another character:
+The strategy cards don't have usage limit in the play stage. \bigskip
+
+These strategy cards can only be played on another hero:
 \begin{itemize}
-\item \texttt{Duel}: From the target player to you, play a ``slash'' card, and repeats, until one who doesn’t play ``slash'', the one get hurt 1 point by another. Duel may bring hurt to yourself.
-\item \texttt{Sabotage}: Discard a player card except you.
-\item \texttt{Theft}: Pick up a card from a character whose \textbf{distance} to you within 1 range.
-\item \texttt{Murder with Borrowed Weapon}: select target who has a weapon in equipment zone and target B (can be yourself) in his attack range. Target A plays a ``slash'' to target B, or you get A’s weapon in equipment zone.
+\item \texttt{Duel}: Target Hero must play a "Strike". If he/she does, then you must use a ``Strike". Continue until a Hero does not use a ``Strike". That Hero then takes 1 damage. It is possible to damage yourself when "Dueling".
+\item \texttt{Dismantle}: Target: Another Hero with card in his/her fields (Hand, Equipment, Judgment);
+Effect: Discard any one card from target's fields (Hand, Equipment, Judgment).
+\item \texttt{Snatch}: Target: Another Hero within one range with card in his/her fields (Hand, Equipment, Judgment);
+Effect: Take any one card from target's fields (Hand, Equipment, Judgment).
+\item \texttt{Borrowed Sword}: Target: Another Hero with an equipped weapon; Effect: Order a Hero to use a \texttt{Strike} on another Hero within his/her weapon range, if not, you receive his/her weapon card. (Pick a target for Hero A to use \texttt{Strike} on, The target (Hero B) needs to be within Hero A's attack range. When Hero A uses \texttt{Strike}, Hero A can choose to activate weapon abilities on He)
+
 \end{itemize}
 
-These strategy cards can be played on any character:
+These strategy cards can be played on any hero (including yourself):
 \begin{itemize}
 \item \texttt{•}
 \end{itemize}
 
 These strategy cards can be played directly:
 \begin{itemize}
-\item \texttt{Arrow Rain}: Everyone except you has to play a ``Dodge'', or you deal 1 damage to him.
-\item \texttt{South Invasion}: Everyone except you has to play a ``Slash'', or you deal 1 damage to him.
-\item \texttt{Oath in Peach Garden}: Everyone recover 1 health point.
-\item \texttt{All Out of None}: Draw two cards.
-\item \texttt{Harvest}: Reveal top $X$ cards of the card pile, where $X$ is the number of players still in play. Start with you, each player in turn chooses and takes one card from the revealed cards.
+\item \texttt{Arrow Barrage}: All other Heroes in turn order must play a \texttt{Dodge} or take 1 damage.
+\item \texttt{Barbarian Invasion}: All other Heroes in turn order must play a \texttt{Strike} or take 1 damage.
+\item \texttt{Peach Garden}: All Heroes regain 1 unit of life in turn order, starting with the Hero who used this card.
+\item \texttt{Something for Nothing}: Draw two cards.
+\item \texttt{Bountiful Harvest}: Reveal top $X$ cards from the deck where $X$ is the number of Heroes alive. Starting with the Hero who used this card, each Hero chooses and keeps a card in turn order from the revealed cards.
 \end{itemize} 
 
-These are delayed strategy cards, which will be put into the target's Fate Zone take effect in his fate phase:
+These are delayed strategy cards, which will be put into the target's Fate Zone and take effect in his fate phase:
 \begin{itemize}
 \item \texttt{Lightning}: Put this card in your Fate Zone. \textbf{Fate}: Reveal the top card of the card pile. If it is a spade card with number from 2 to 9, Lightning deals 3 damage to you; if it is not, put Lightning in the Fate Zone of the player to the next player to take turn.
 \item \texttt{Drown in Happiness}: Put this card in another player's Fate Zone. \textbf{Fate}: Reveal the top card of the card pile, if it is a heart card, he will not be affected; or he will lose the action phase.
 \item \texttt{Starvation}: Put this card in another player's Fate Zone, whose \textbf{distance} to you within 1 range. \textbf{Fate}: Reveal the top card of the card pile, if it is a clubs card, he will not be affected; or he will lose the draw phase.
 \end{itemize}
 
+\subsubsection{Equipment Cards}
+There are three kinds of equipment cards: \textbf{weapon}, \textbf{armor} and \textbf{horse}.
+
+\begin{itemize}
+\item \texttt{•}: 
+\end{itemize}
+
+
+
+\begin{itemize}
+\item \texttt{+1 horse}: when another player is calculating distance with you, the distance + 1.
+\item \texttt{-1 horse}: when you are calculating distance with another player, the distance - 1. (The minimum distance is 1)
+\end{itemize}
+
+You can equip \texttt{+1 horse} and \texttt{-1 horse} together.
 
 \subsection{Countries and Generals}
 
 Before the game starts, each player can select two generals in the same country. There are four countries: \textbf{SHU}, \textbf{WU}, \textbf{WEI} and \textbf{QUN}. The game ends when only player(s) from one country is/are alive and every player had claimed his country. \bigskip
 
-The general cards are placed upside down initially, which means the identities of a player (including his country and generals) are kept secret, and he doesn't belong to any country. When he \textbf{turns over} any of his generals, his country is claimed, thus everyone in the game will know it. When a player is dead, all of his generals will be \textbf{turned over} and his country will be claimed. \bigskip
 
-If a player first \textbf{turns over} at least one of his generals, he can draw three cards from the deck.
+The general cards are placed upside down initially, which means the identities of a player (including his country and generals) are kept secret, and he doesn't belong to any country. When he \textbf{reveal} any of his generals, his country is claimed, thus everyone in the game will know it. When a player is dead, all of his generals will be \textbf{revealed} and his country will be claimed. \bigskip
+
+If a player first \textbf{reveal} at least one of his generals, he can draw three cards from the deck. \bigskip
+
+When a player \textbf{claims} his country, but the number of players in that country $m$ (including him) exceeds half of the number of game players ($m>n/2$), he will be considered as a \textbf{careerist}. A \textbf{careerist} doesn't belong to any country, and two \textbf{careerists} are also not in the same country. A \textbf{careerist} must defeat all of other players to win the game.
 
 
 
@@ -118,7 +143,11 @@ If a player first \textbf{turns over} at least one of his generals, he can draw 
 
 
 
-
+\section{Reference}
+\begin{enumerate}
+\item English website: \url{http://www.sanguosha.us}
+\item Chinese official website: \url{https://www.sanguosha.com}
+\end{enumerate}
 
 
 \end{document} 
