@@ -43,17 +43,17 @@ The players sit in a circle, and start their \textbf{play} in order of their sea
 
 The \textbf{distance} between two players is defined as the minimum difference of their seats' position. For example, initially the \textbf{distance} between player 1 and $n$ is 1, and between player 3 and 8 is $\min\{5,n-5\}$. If a player had left the game, his seat is removed so that the calculation of \textbf{distance} should skip him. The minimum \textbf{distance} between two players is 1. \bigskip
 
-Before the game starts, shuffle the cards, and each player draws \textbf{four cards} from the deck in the above order, initialize their health point according to the \textbf{generals} they selected (will be introduced later). \bigskip
+Before the game starts, shuffle the cards, and each player draws \textbf{four cards} from the deck in the above order, initialize their unit of life according to the \textbf{generals} they selected (will be introduced later). \bigskip
 
-When the health point of a player is no more than zero, we can say that he is \textbf{dying}. Then he \textbf{must} request for rescue from all players (including himself) in a round, starting from the current playing player. Note that he himself can play both \texttt{peach} and \texttt{wine}, while other players can only play \texttt{peach} to save him. Each \texttt{peach} or \texttt{wine} can recover him for 1 health point. The request procedure ends when he gets rid of the \textbf{dying} state. If all players have been requested but he is still in the \textbf{dying} state, the player's game over, remove his seat and all of his cards are moved into the \textbf{used card pool}. \bigskip
+When the unit of life of a player is no more than zero, we can say that he is \textbf{dying}. Then he \textbf{must} request for rescue from all players (including himself) in a round, starting from the current playing player. Note that he himself can play both \texttt{peach} and \texttt{wine}, while other players can only play \texttt{peach} to save him. Each \texttt{peach} or \texttt{wine} can recover him for 1 unit of life. The request procedure ends when he gets rid of the \textbf{dying} state. If all players have been requested but he is still in the \textbf{dying} state, the player's game over, remove his seat and all of his cards are moved into the \textbf{used card pool}. \bigskip
 
 Each player has four phases in his turn, which are
 \begin{itemize}
 %\item prepare phase (some skills can be used in this stage)
-\item fate phase (judge the delayed strategy card(s))
+\item fate phase (judge the delayed scroll card(s))
 \item draw phase (draw two cards from the deck)
 \item play phase (player can play cards in this stage)
-\item discard phase (player can only hold cards no more than their health points, the exceeding cards will be discarded by himself)
+\item discard phase (player can only hold cards no more than their unit of lifes, the exceeding cards will be discarded by himself)
 %\item finish phase (some skills can be used in this stage)
 \end{itemize}
 
@@ -65,52 +65,59 @@ When a player plays or discards a card, or a card is used as a \textbf{fate card
 
 There are four types of normal cards in the game:
 \begin{itemize}
-\item \texttt{Slash}: slash another player, if he doesn't play a ``dodge'', cause damage (of default: 1)
-\item \texttt{Dodge}: dodge from a slash (can not be played initiatively)
-\item \texttt{Peach}: recover one health point, can be used on another player only if his health point is 0
-\item \texttt{Wine}: recover one health point when own health point is 0, or add 1 damage to the next ``slash'' in this stage
+\item \texttt{Strike}: strike another player, if he doesn't play a ``dodge'', cause damage (of default: 1)
+\begin{itemize}
+\item \texttt{Lightning Strike}: change the damage to lightning damage
+\item \texttt{Fire Strike}: change the damage to fire damage
+\end{itemize}
+\item \texttt{Dodge}: dodge from a strike (can not be played initiatively)
+\item \texttt{Peach}: regain a unit of life, can be used on another player only if he is \textbf{dying}
+\item \texttt{Wine}: regain a unit of life when \textbf{dying}, or add 1 damage to the next \texttt{strike} in this stage
 \end{itemize}
 
-\texttt{slash} and \texttt{wine} can be only used once in the play stage.
+\texttt{strike} and \texttt{wine} can be only used once in the play stage.
 
 \subsubsection{Scroll Cards}
 
-The strategy cards don't have usage limit in the play stage. \bigskip
+The scroll cards don't have usage limit in the play stage. \bigskip
 
-These strategy cards can only be played on another hero:
+These scroll cards can only be played on another hero:
 \begin{itemize}
-\item \texttt{Duel}: Target Hero must play a "Strike". If he/she does, then you must use a ``Strike". Continue until a Hero does not use a ``Strike". That Hero then takes 1 damage. It is possible to damage yourself when "Dueling".
-\item \texttt{Dismantle}: Target: Another Hero with card in his/her fields (Hand, Equipment, Judgment);
-Effect: Discard any one card from target's fields (Hand, Equipment, Judgment).
-\item \texttt{Snatch}: Target: Another Hero within one range with card in his/her fields (Hand, Equipment, Judgment);
-Effect: Take any one card from target's fields (Hand, Equipment, Judgment).
+\item \texttt{Duel}: Target Hero must play a "Strike". If he/she does, then you must use a \texttt{Strike}. Continue until a Hero does not use a \texttt{Strike}. That Hero then takes 1 damage. It is possible to damage yourself when "Dueling".
+\item \texttt{Dismantle}: Target: Another Hero with card in his/her fields (Hand, Equipment, Fate);
+Effect: Discard any one card from target's fields (Hand, Equipment, Fate).
+\item \texttt{Snatch}: Target: Another Hero within one range with card in his/her fields (Hand, Equipment, Fate);
+Effect: Take any one card from target's fields (Hand, Equipment, Fate).
 \item \texttt{Borrowed Sword}: Target: Another Hero with an equipped weapon; Effect: Order a Hero to use a \texttt{Strike} on another Hero within his/her weapon range, if not, you receive his/her weapon card. (Pick a target for Hero A to use \texttt{Strike} on, The target (Hero B) needs to be within Hero A's attack range. When Hero A uses \texttt{Strike}, Hero A can choose to activate weapon abilities on He)
-
+\item \texttt{Diplomacy}: The target draws one card and then you draw three cards
+\item \texttt{Know thyself}: Options: 1. Check one of the hero or all of the cards in hand of the target; 2. Draw a card.
 \end{itemize}
 
-These strategy cards can be played on any hero (including yourself):
+These scroll cards can be played on any hero (including yourself):
 \begin{itemize}
-\item \texttt{•}
+\item \texttt{Chain}: Options: 1. Target: One or two heroes; Effect: Change the chain status of the target(s). If the target is not chained, turn him into the chain state; otherwise, cancel the chain state. When a chained player receives fire or lightning damage, all of the chained player will receive the same damage in the order of seats, and then cancel their chain state; 2. Draw a card.
+\item \texttt{Arson}: Target: One hero with cards in hand. Effect: The target shows one card in hand publicly, and if you discard a card in the same suit as the shown card, deal one fire damage to the target. (can be used on yourself and deal damage as usual)
 \end{itemize}
 
-These strategy cards can be played directly:
+These scroll cards can be played directly:
 \begin{itemize}
 \item \texttt{Arrow Barrage}: All other Heroes in turn order must play a \texttt{Dodge} or take 1 damage.
 \item \texttt{Barbarian Invasion}: All other Heroes in turn order must play a \texttt{Strike} or take 1 damage.
 \item \texttt{Peach Garden}: All Heroes regain 1 unit of life in turn order, starting with the Hero who used this card.
 \item \texttt{Something for Nothing}: Draw two cards.
 \item \texttt{Bountiful Harvest}: Reveal top $X$ cards from the deck where $X$ is the number of Heroes alive. Starting with the Hero who used this card, each Hero chooses and keeps a card in turn order from the revealed cards.
+\item \texttt{Rest}: Draw two cards and then discard two cards.
 \end{itemize} 
 
-These are delayed strategy cards, which will be put into the target's Fate Zone and take effect in his fate phase:
+These are delayed scroll cards, which will be put into the target's Fate Zone and take effect in his fate phase:
 \begin{itemize}
-\item \texttt{Lightning}: Put this card in your Fate Zone. \textbf{Fate}: Reveal the top card of the card pile. If it is a spade card with number from 2 to 9, Lightning deals 3 damage to you; if it is not, put Lightning in the Fate Zone of the player to the next player to take turn.
-\item \texttt{Drown in Happiness}: Put this card in another player's Fate Zone. \textbf{Fate}: Reveal the top card of the card pile, if it is a heart card, he will not be affected; or he will lose the action phase.
-\item \texttt{Starvation}: Put this card in another player's Fate Zone, whose \textbf{distance} to you within 1 range. \textbf{Fate}: Reveal the top card of the card pile, if it is a clubs card, he will not be affected; or he will lose the draw phase.
+\item \texttt{Lightning}: Put this card in your Fate Zone. \textbf{Fate}: Reveal the top card of the deck. If it is a spade card with number from 2 to 9, Lightning deals 3 damage to you; if it is not, put Lightning in the Fate Zone of the player to the next player to take turn.
+\item \texttt{Contentment}: Put this card in another player's Fate Zone. \textbf{Fate}: Reveal the top card of the deck, if it is a heart card, he will not be affected; or he will lose the action phase.
+\item \texttt{Starvation}: Put this card in another player's Fate Zone, whose \textbf{distance} to you within 1 range. \textbf{Fate}: Reveal the top card of the deck, if it is a clubs card, he will not be affected; or he will lose the draw phase.
 \end{itemize}
 
 \subsubsection{Equipment Cards}
-There are three kinds of equipment cards: \textbf{weapon}, \textbf{armor} and \textbf{horse}.
+There are three kinds of equipment cards: \textbf{weapon}, \textbf{armor} and \textbf{mount}.
 
 \begin{itemize}
 \item \texttt{•}: 
@@ -119,11 +126,11 @@ There are three kinds of equipment cards: \textbf{weapon}, \textbf{armor} and \t
 
 
 \begin{itemize}
-\item \texttt{+1 horse}: when another player is calculating distance with you, the distance + 1.
-\item \texttt{-1 horse}: when you are calculating distance with another player, the distance - 1. (The minimum distance is 1)
+\item \texttt{+1 Mount}: when another player is calculating distance with you, the distance + 1.
+\item \texttt{-1 Mount}: when you are calculating distance with another player, the distance - 1. (The minimum distance is 1)
 \end{itemize}
 
-You can equip \texttt{+1 horse} and \texttt{-1 horse} together.
+You can equip one \texhorsetbf{weapon}, one  \texttt{+1 mount} and \texttt{-1 mount} together.
 
 \subsection{Countries and Generals}
 
