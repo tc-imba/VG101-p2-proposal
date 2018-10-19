@@ -33,7 +33,9 @@
 
 \section{Project Setup}
 
-Game name: Legends of the Three Kingdoms 
+Recently, Frank and Nanthan discovered a new game: Legends of the Three Kingdoms. They found that the AI (Artificial Intelligence) in the online version of this game is not very advanced. Now they are aiming at developing their own version of it and try to improve the AI players. \bigskip
+
+First they need a working version of the game, so they turned to you for help...
 
 \subsection{Game Introduction}
 
@@ -43,7 +45,7 @@ The players sit in a circle, and start their \textbf{play} in order of their sea
 
 The \textbf{distance} between two players is defined as the minimum difference of their seats' position. For example, initially the \textbf{distance} between player 1 and $n$ is 1, and between player 3 and 8 is $\min\{5,n-5\}$. If a player had left the game, his seat is removed so that the calculation of \textbf{distance} should skip him. The minimum \textbf{distance} between two players is 1. \bigskip
 
-Before the game starts, shuffle the cards, and each player draws \textbf{four cards} from the deck in the above order, initialize their unit of life according to the \textbf{generals} they selected (will be introduced later). \bigskip
+Before the game starts, shuffle the cards, and each player draws \textbf{four cards} from the deck in the above order, initialize their unit of life according to the \textbf{heroes} they selected (will be introduced later). \bigskip
 
 When the unit of life of a player is no more than zero, we can say that he is \textbf{dying}. Then he \textbf{must} request for rescue from all players (including himself) in a round, starting from the current playing player. Note that he himself can play both \texttt{peach} and \texttt{wine}, while other players can only play \texttt{peach} to save him. Each \texttt{peach} or \texttt{wine} can recover him for 1 unit of life. The request procedure ends when he gets rid of the \textbf{dying} state. If all players have been requested but he is still in the \textbf{dying} state, the player's game over, remove his seat and all of his cards are moved into the \textbf{used card pool}. \bigskip
 
@@ -93,7 +95,7 @@ Effect: Take any one card from target's fields (Hand, Equipment, Fate).
 \item \texttt{Know thyself}: Options: 1. Check one of the hero or all of the cards in hand of the target; 2. Draw a card.
 \end{itemize}
 
-These scroll cards can be played on any hero (including yourself):
+These scroll cards can be played on any hero (including yourself): (maybe optional tasks)
 \begin{itemize}
 \item \texttt{Chain}: Options: 1. Target: One or two heroes; Effect: Change the chain status of the target(s). If the target is not chained, turn him into the chain state; otherwise, cancel the chain state. When a chained player receives fire or lightning damage, all of the chained player will receive the same damage in the order of seats, and then cancel their chain state; 2. Draw a card.
 \item \texttt{Arson}: Target: One hero with cards in hand. Effect: The target shows one card in hand publicly, and if you discard a card in the same suit as the shown card, deal one fire damage to the target. (can be used on yourself and deal damage as usual)
@@ -109,50 +111,84 @@ These scroll cards can be played directly:
 \item \texttt{Rest}: Draw two cards and then discard two cards.
 \end{itemize} 
 
-These are delayed scroll cards, which will be put into the target's Fate Zone and take effect in his fate phase:
+These are delayed scroll cards, which will be put into the target's Fate Zone and take effect in his fate phase: (maybe optional tasks)
 \begin{itemize}
 \item \texttt{Lightning}: Put this card in your Fate Zone. \textbf{Fate}: Reveal the top card of the deck. If it is a spade card with number from 2 to 9, Lightning deals 3 damage to you; if it is not, put Lightning in the Fate Zone of the player to the next player to take turn.
 \item \texttt{Contentment}: Put this card in another player's Fate Zone. \textbf{Fate}: Reveal the top card of the deck, if it is a heart card, he will not be affected; or he will lose the action phase.
 \item \texttt{Starvation}: Put this card in another player's Fate Zone, whose \textbf{distance} to you within 1 range. \textbf{Fate}: Reveal the top card of the deck, if it is a clubs card, he will not be affected; or he will lose the draw phase.
 \end{itemize}
 
-\subsubsection{Equipment Cards}
-There are three kinds of equipment cards: \textbf{weapon}, \textbf{armor} and \textbf{mount}.
+\subsubsection{Equipment Cards (maybe optional tasks)}
+There are three kinds of equipment cards: \textbf{Weapon}, \textbf{Armor} and \textbf{Mount}. \bigskip
 
+\textbf{Weapons}: 
 \begin{itemize}
-\item \texttt{•}: 
+\item \texttt{Black Pommel} (range 2): Your \texttt{Strike} ignores the Effect of target's \textbf{Armor}
+\item \texttt{Chu Ko Nu} (range 1): When equipped you can use any number of \texttt{Strike}(s) during your play phase.
+\item \texttt{Eighteen-span Viper Spear} (range 3): You may treat two hand cards as a \texttt{Strike} to use or play.
+\item \texttt{Frost Sword} (range 2): When your \texttt{Strike} damages a Hero, you may prevent that damage by discarding any two cards from target's hand or equipment field (discarding one card at a time).
+\item \texttt{Green Dragon Crescent Blade} (range 3): You may use another \texttt{Strike} on the target who \texttt{Dodged} your last "Strike".
+\item \texttt{Heavenly Double Halberd} (range 4): If you use a \texttt{Strike} as your last hand card, you may attack one or two more additional targets of your choice. Hero(es) respond to the "Strike" in turn order.
+\item \texttt{Qilin Bow} (range 5): When your \texttt{Strike} deals damage to the target, you can eliminate one equipped \texttt{mount} card of your choice from the target.
+\item \texttt{Stone Piercing Axe} (range 3): When your \texttt{Strike} is \texttt{Dodged}, you may discard two of your cards to force the target to take damage from the \texttt{Strike}.
+\item \texttt{Yin-Yang Swords} (range 2): When Striking a Hero of the opposite gender, target Hero must choose to discard a hand card or let you draw a card before that \texttt{Strike} resolves.
+\item \texttt{Ancient Scimitar} (range 2): Passive Effect: When Striking a Hero without hand card, the damage + 1.
+\item \texttt{Phoenix Fan} (range 4): All of your normal \texttt{Strike} will be turned into \texttt{Fire Strike}.
 \end{itemize}
 
+The default \texttt{strike} range is 1 (without weapon). If a weapon is equipped, the \texttt{strike} range becomes the weapon's \texttt{strike} range. The player is able to play a \texttt{strike} on another player when the distance calculated with that player is no more than the attack range.
 
+\texttt{Armors}:
+\begin{itemize}
+\item \texttt{Eight Diagram Formation}: Anytime you need to play a \texttt{Dodge}, you may reveal a judgment; if the judgment is a red color suit then, it is treated as a \texttt{Dodge}.
+\item \texttt{Sage King Shield}: Passive Effect: Black colored suited "Strike" have no effect against you.
+\item \texttt{Silver Lion}: Passive Effect: You take at most 1 damage every time. When you lose this armor, regain 1 unit of life.
+\item \texttt{Rattan Armor}: Passive Effect: Ignore the effect of \texttt{Barbarian Invasion}, \texttt{Arrow Barrage} and normal \texttt{Strike}. Any fire damage you take + 1.
+\end{itemize}
 
+\textbf{Mounts}:
 \begin{itemize}
 \item \texttt{+1 Mount}: when another player is calculating distance with you, the distance + 1.
 \item \texttt{-1 Mount}: when you are calculating distance with another player, the distance - 1. (The minimum distance is 1)
 \end{itemize}
 
-You can equip one \texhorsetbf{weapon}, one  \texttt{+1 mount} and \texttt{-1 mount} together.
+``Passive Effect'' means that this effect must be used. You can equip one \textbf{Weapon}, one \textbf{Armor}, one \textbf{+1 Mount} and one \textbf{-1 Mount} at the same time.
 
-\subsection{Countries and Generals}
+\subsection{Countries and Heroes}
 
-Before the game starts, each player can select two generals in the same country. There are four countries: \textbf{SHU}, \textbf{WU}, \textbf{WEI} and \textbf{QUN}. The game ends when only player(s) from one country is/are alive and every player had claimed his country. \bigskip
-
-
-The general cards are placed upside down initially, which means the identities of a player (including his country and generals) are kept secret, and he doesn't belong to any country. When he \textbf{reveal} any of his generals, his country is claimed, thus everyone in the game will know it. When a player is dead, all of his generals will be \textbf{revealed} and his country will be claimed. \bigskip
-
-If a player first \textbf{reveal} at least one of his generals, he can draw three cards from the deck. \bigskip
-
-When a player \textbf{claims} his country, but the number of players in that country $m$ (including him) exceeds half of the number of game players ($m>n/2$), he will be considered as a \textbf{careerist}. A \textbf{careerist} doesn't belong to any country, and two \textbf{careerists} are also not in the same country. A \textbf{careerist} must defeat all of other players to win the game.
+Before the game starts, each player can select two heroes in the same country. There are four countries: \textbf{SHU}, \textbf{WU}, \textbf{WEI} and \textbf{QUN}. The game ends when only player(s) from one country is/are alive and every player had claimed his country. \bigskip
 
 
+The hero cards are placed upside down initially, which means the identities of a player (including his country and heroes) are kept secret, and he doesn't belong to any country. When he \textbf{reveal} any of his heroes, his country is claimed, thus everyone in the game will know it. When a player is dead, all of his heroes will be \textbf{revealed} and his country will be claimed. \bigskip
+
+If a player first \textbf{reveal} at least one of his heroes, he can draw three cards from the deck. \bigskip
+
+When a player \textbf{claims} his country, but the number of players in that country $m$ (including him) exceeds half of the number of game players ($m>n/2$), he will be considered as a \textbf{careerist}. A \textbf{careerist} doesn't belong to any country, and two \textbf{careerists} are also not in the same country. A \textbf{careerist} must defeat all of other players to win the game. \bigskip
+
+The life of one player is the sum of two heroes he chose. Note that the life of one hero may be half integer, which means it can be 1.5, 2.5 and etc. If the sum is not an integer, when both of the heroes are \textbf{revealed}, the player can draw one card.
 
 \section{Project tasks}
+
+\subsection{Input Files}
+
+Two files should be provided to help the initialization of the game, \texttt{cards.txt} and \texttt{heroes.txt}.
+
+\subsubsection{cards.txt}
+Each line of the file contains a tuple of card name, number and suit, separated by a comma, for example,
+\inputminted{shell}{cards.txt}
+
+The numbers are in \{A,2,3,4,5,6,7,8,9,10,J,Q,K\}, and the suits are in \{Heart,Spade,Diamond,Club\}.
+
+\subsubsection{heroes.txt}
+Each line of the file contains a tuple of hero name, country and unit of life. 
+\inputminted{shell}{heroes.txt}
 
 
 
 
 \section{Reference}
 \begin{enumerate}
-\item English website: \url{http://www.sanguosha.us}
+\item English official website: \url{http://www.sanguosha.us}
 \item Chinese official website: \url{https://www.sanguosha.com}
 \end{enumerate}
 
